@@ -115,7 +115,7 @@ function FabricBlock({ fabric }: { fabric: Fabric }) {
             </p>
           )}
           {/* Price — right side */}
-          <div className="ml-auto text-right">
+          <div className="ml-auto text-right mb-[10px]">
             <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
               Цена
             </p>
