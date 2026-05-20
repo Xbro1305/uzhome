@@ -120,9 +120,15 @@ function FabricBlock({ fabric }: { fabric: Fabric }) {
               Цена
             </p>
             <p className="font-display text-2xl md:text-3xl font-light text-brand-primary">
-              {fabric.price.toLocaleString("ru-RU")} {fabric.currency}
+              <span className="text-4xl">
+                {fabric.price.toLocaleString("ru-RU")} {fabric.currency}
+              </span>
+              <br />
+              <span className="font-display text-xl text-brand-muted ml-1">
+                c НДС
+              </span>
               <span className="font-body text-sm text-brand-muted ml-1">
-                / {fabric.priceUnit}
+                {fabric.priceUnit}
               </span>
             </p>
           </div>
@@ -172,7 +178,6 @@ function FabricBlock({ fabric }: { fabric: Fabric }) {
           )}
         </div>
       </div>
-
       {/* Carousel */}
       {colors.length === 0 ? (
         <div
@@ -307,7 +312,10 @@ export default function FabricsSection() {
   }, []);
 
   return (
-    <section id="fabrics" className="py-24 lg:py-36 bg-white overflow-hidden">
+    <section
+      id="fabrics"
+      className="py-24 lg:py-36 bg-white overflow-hidden flex flex-col gap-4"
+    >
       <div
         ref={sectionRef as React.RefObject<HTMLDivElement>}
         className="section-fade"
@@ -339,6 +347,9 @@ export default function FabricsSection() {
           </div>
         )}
       </div>
+      <span className="text-brand-dark text-md text-center font-body mt-[20px]">
+        Скидка на объем обсуждаются в индивидуальном порядке
+      </span>
     </section>
   );
 }

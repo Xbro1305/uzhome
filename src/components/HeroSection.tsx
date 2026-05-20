@@ -1,6 +1,6 @@
 export default function HeroSection() {
   const handleScroll = (href: string) => {
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -156,14 +156,6 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Scroll hint */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-60">
-        <div className="w-px h-8 bg-brand-primary" />
-        <span className="font-body text-[10px] tracking-[0.3em] uppercase text-brand-muted">
-          Листать
-        </span>
       </div>
     </section>
   );
