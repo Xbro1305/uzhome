@@ -213,7 +213,7 @@ export default function AdminFabrics() {
                     min="0"
                     thousandSeparator=" "
                     value={form.price}
-                    onValueChange={(e) => {
+                    onValueChange={(e: any) => {
                       setForm((p) => ({
                         ...p,
                         price: Number(e.floatValue) || 0,
