@@ -1,12 +1,29 @@
-import { useEffect, useState } from 'react';
-import { Plus, Trash2, Edit2, ChevronDown, ChevronUp, Image, X } from 'lucide-react';
-import toast from 'react-hot-toast';
-import api from '../../api/client';
-import type { Fabric } from '../../types';
+import { useEffect, useState } from "react";
+import {
+  Plus,
+  Trash2,
+  Edit2,
+  ChevronDown,
+  ChevronUp,
+  Image,
+  X,
+} from "lucide-react";
+import toast from "react-hot-toast";
+import api from "../../api/client";
+import type { Fabric } from "../../types";
+import { NumericFormat } from "react-number-format";
 
 const emptyFabric = {
-  name: '', description: '', composition: '', width: '', density: '',
-  price: '', priceUnit: 'за метр', currency: 'сум', isActive: true, order: '0',
+  name: "",
+  description: "",
+  composition: "",
+  width: "",
+  density: "",
+  price: 0,
+  priceUnit: "за метр",
+  currency: "сум",
+  isActive: true,
+  order: "0",
 };
 
 export default function AdminFabrics() {
@@ -20,14 +37,17 @@ export default function AdminFabrics() {
   const [form, setForm] = useState({ ...emptyFabric });
 
   // Color form
-  const [colorForm, setColorForm] = useState({ article: '', name: '' });
+  const [colorForm, setColorForm] = useState({ article: "", name: "" });
   const [colorFile, setColorFile] = useState<File | null>(null);
   const [colorPreview, setColorPreview] = useState<string | null>(null);
   const [colorFabricId, setColorFabricId] = useState<string | null>(null);
   const [addingColor, setAddingColor] = useState(false);
 
   const load = () => {
-    api.get('/fabrics/admin').then(r => setFabrics(r.data)).finally(() => setLoading(false));
+    api
+      .get("/fabrics/admin")
+      .then((r) => setFabrics(r.data))
+      .finally(() => setLoading(false));
   };
   useEffect(load, []);
 
@@ -59,22 +79,22 @@ export default function AdminFabrics() {
     try {
       if (editingId) {
         await api.put(`/fabrics/${editingId}`, form);
-        toast.success('Ткань обновлена');
+        toast.success("Ткань обновлена");
       } else {
-        await api.post('/fabrics', form);
-        toast.success('Ткань добавлена');
+        await api.post("/fabrics", form);
+        toast.success("Ткань добавлена");
       }
       setShowForm(false);
       load();
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Ошибка сохранения');
+      toast.error(err.response?.data?.message || "Ошибка сохранения");
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Удалить ткань и все расцветки?')) return;
+    if (!confirm("Удалить ткань и все расцветки?")) return;
     await api.delete(`/fabrics/${id}`);
-    toast.success('Ткань удалена');
+    toast.success("Ткань удалена");
     load();
   };
 
@@ -89,39 +109,43 @@ export default function AdminFabrics() {
     if (!colorFile || !colorFabricId) return;
     setAddingColor(true);
     const fd = new FormData();
-    fd.append('image', colorFile);
-    fd.append('article', colorForm.article);
-    fd.append('name', colorForm.name);
+    fd.append("image", colorFile);
+    fd.append("article", colorForm.article);
+    fd.append("name", colorForm.name);
     try {
       await api.post(`/fabrics/${colorFabricId}/colors`, fd, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      toast.success('Расцветка добавлена');
-      setColorForm({ article: '', name: '' });
+      toast.success("Расцветка добавлена");
+      setColorForm({ article: "", name: "" });
       setColorFile(null);
       setColorPreview(null);
       load();
     } catch {
-      toast.error('Ошибка загрузки');
+      toast.error("Ошибка загрузки");
     } finally {
       setAddingColor(false);
     }
   };
 
   const handleDeleteColor = async (fabricId: string, colorId: string) => {
-    if (!confirm('Удалить расцветку?')) return;
+    if (!confirm("Удалить расцветку?")) return;
     await api.delete(`/fabrics/${fabricId}/colors/${colorId}`);
-    toast.success('Расцветка удалена');
+    toast.success("Расцветка удалена");
     load();
   };
 
   // ── Fabric form fields ──
   const fabricFields = [
-    { key: 'name',        label: 'Название *',                    required: true  },
-    { key: 'description', label: 'Описание',                      required: false },
-    { key: 'composition', label: 'Состав (напр. 100% хлопок)',    required: false },
-    { key: 'width',       label: 'Ширина (напр. 220 см)',         required: false },
-    { key: 'density',     label: 'Плотность (напр. 120 г/м²)',   required: false },
+    { key: "name", label: "Название *", required: true },
+    { key: "description", label: "Описание", required: false },
+    {
+      key: "composition",
+      label: "Состав (напр. 100% хлопок)",
+      required: false,
+    },
+    { key: "width", label: "Ширина (напр. 220 см)", required: false },
+    { key: "density", label: "Плотность (напр. 120 г/м²)", required: false },
   ];
 
   return (
@@ -129,8 +153,12 @@ export default function AdminFabrics() {
       {/* Page header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="font-display text-3xl font-light text-brand-dark">Ткани</h1>
-          <p className="font-body text-brand-muted text-sm mt-1">Управление ассортиментом</p>
+          <h1 className="font-display text-3xl font-light text-brand-dark">
+            Ткани
+          </h1>
+          <p className="font-body text-brand-muted text-sm mt-1">
+            Управление ассортиментом
+          </p>
         </div>
         <button
           onClick={openCreate}
@@ -146,10 +174,13 @@ export default function AdminFabrics() {
           <div className="bg-white w-full max-w-lg max-h-[90vh] overflow-y-auto p-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-display text-2xl text-brand-dark">
-                {editingId ? 'Редактировать ткань' : 'Новая ткань'}
+                {editingId ? "Редактировать ткань" : "Новая ткань"}
               </h2>
               <button onClick={() => setShowForm(false)}>
-                <X size={20} className="text-brand-muted hover:text-brand-dark" />
+                <X
+                  size={20}
+                  className="text-brand-muted hover:text-brand-dark"
+                />
               </button>
             </div>
 
@@ -163,7 +194,9 @@ export default function AdminFabrics() {
                     type="text"
                     required={required}
                     value={(form as any)[key]}
-                    onChange={e => setForm(p => ({ ...p, [key]: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, [key]: e.target.value }))
+                    }
                     className="w-full border border-brand-light px-3 py-2 font-body text-sm text-brand-dark focus:outline-none focus:border-brand-primary"
                   />
                 </div>
@@ -172,30 +205,47 @@ export default function AdminFabrics() {
               {/* Price row */}
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-body text-xs tracking-[0.2em] uppercase text-brand-muted mb-1">Цена *</label>
-                  <input
-                    type="number" required min="0"
+                  <label className="block font-body text-xs tracking-[0.2em] uppercase text-brand-muted mb-1">
+                    Цена *
+                  </label>
+                  <NumericFormat
+                    required
+                    min="0"
+                    thousandSeparator=" "
                     value={form.price}
-                    onChange={e => setForm(p => ({ ...p, price: e.target.value }))}
+                    onValueChange={(e) => {
+                      setForm((p) => ({
+                        ...p,
+                        price: Number(e.floatValue) || 0,
+                      }));
+                    }}
                     className="w-full border border-brand-light px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
                   />
                 </div>
                 <div>
-                  <label className="block font-body text-xs tracking-[0.2em] uppercase text-brand-muted mb-1">Единица</label>
+                  <label className="block font-body text-xs tracking-[0.2em] uppercase text-brand-muted mb-1">
+                    Единица
+                  </label>
                   <input
                     type="text"
                     value={form.priceUnit}
-                    onChange={e => setForm(p => ({ ...p, priceUnit: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, priceUnit: e.target.value }))
+                    }
                     className="w-full border border-brand-light px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
                     placeholder="за метр"
                   />
                 </div>
                 <div>
-                  <label className="block font-body text-xs tracking-[0.2em] uppercase text-brand-muted mb-1">Валюта</label>
+                  <label className="block font-body text-xs tracking-[0.2em] uppercase text-brand-muted mb-1">
+                    Валюта
+                  </label>
                   <input
                     type="text"
                     value={form.currency}
-                    onChange={e => setForm(p => ({ ...p, currency: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, currency: e.target.value }))
+                    }
                     className="w-full border border-brand-light px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
                     placeholder="сум"
                   />
@@ -205,11 +255,15 @@ export default function AdminFabrics() {
               {/* Order + active */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-body text-xs tracking-[0.2em] uppercase text-brand-muted mb-1">Порядок</label>
+                  <label className="block font-body text-xs tracking-[0.2em] uppercase text-brand-muted mb-1">
+                    Порядок
+                  </label>
                   <input
                     type="number"
                     value={form.order}
-                    onChange={e => setForm(p => ({ ...p, order: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, order: e.target.value }))
+                    }
                     className="w-full border border-brand-light px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
                   />
                 </div>
@@ -218,10 +272,17 @@ export default function AdminFabrics() {
                     <input
                       type="checkbox"
                       checked={form.isActive as unknown as boolean}
-                      onChange={e => setForm(p => ({ ...p, isActive: e.target.checked as any }))}
+                      onChange={(e) =>
+                        setForm((p) => ({
+                          ...p,
+                          isActive: e.target.checked as any,
+                        }))
+                      }
                       className="w-4 h-4 accent-brand-primary"
                     />
-                    <span className="font-body text-sm text-brand-dark">Активна</span>
+                    <span className="font-body text-sm text-brand-dark">
+                      Активна
+                    </span>
                   </label>
                 </div>
               </div>
@@ -231,7 +292,7 @@ export default function AdminFabrics() {
                   type="submit"
                   className="flex-1 bg-brand-primary text-white font-body text-sm tracking-wider py-3 hover:bg-brand-dark transition-colors"
                 >
-                  {editingId ? 'Сохранить' : 'Добавить'}
+                  {editingId ? "Сохранить" : "Добавить"}
                 </button>
                 <button
                   type="button"
@@ -257,15 +318,18 @@ export default function AdminFabrics() {
         </div>
       ) : (
         <div className="space-y-3">
-          {fabrics.map(fabric => (
+          {fabrics.map((fabric) => (
             <div key={fabric._id} className="bg-white">
-
               {/* Row header */}
               <div className="flex items-center gap-4 p-5">
                 {/* Thumbnail of first color */}
                 <div className="w-14 h-14 bg-brand-cream flex-shrink-0 overflow-hidden">
                   {fabric.colors[0]?.imageUrl ? (
-                    <img src={fabric.colors[0].imageUrl} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={fabric.colors[0].imageUrl}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
                       <Image size={18} className="text-brand-muted" />
@@ -275,14 +339,19 @@ export default function AdminFabrics() {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-body font-medium text-brand-dark truncate">{fabric.name}</h3>
+                    <h3 className="font-body font-medium text-brand-dark truncate">
+                      {fabric.name}
+                    </h3>
                     {!fabric.isActive && (
-                      <span className="text-xs bg-brand-beige text-brand-muted px-2 py-0.5 rounded-sm">Скрыта</span>
+                      <span className="text-xs bg-brand-beige text-brand-muted px-2 py-0.5 rounded-sm">
+                        Скрыта
+                      </span>
                     )}
                   </div>
                   <p className="font-body text-sm text-brand-muted">
-                    {fabric.price.toLocaleString('ru-RU')} {fabric.currency} / {fabric.priceUnit}
-                    {' · '}
+                    {fabric.price.toLocaleString("ru-RU")} {fabric.currency} /{" "}
+                    {fabric.priceUnit}
+                    {" · "}
                     {fabric.colors.length} расцветок
                   </p>
                 </div>
@@ -303,14 +372,17 @@ export default function AdminFabrics() {
                     <Trash2 size={16} className="text-red-400" />
                   </button>
                   <button
-                    onClick={() => setExpanded(expanded === fabric._id ? null : fabric._id)}
+                    onClick={() =>
+                      setExpanded(expanded === fabric._id ? null : fabric._id)
+                    }
                     className="p-2 hover:bg-brand-cream rounded transition-colors"
                     title="Расцветки"
                   >
-                    {expanded === fabric._id
-                      ? <ChevronUp size={16} className="text-brand-muted" />
-                      : <ChevronDown size={16} className="text-brand-muted" />
-                    }
+                    {expanded === fabric._id ? (
+                      <ChevronUp size={16} className="text-brand-muted" />
+                    ) : (
+                      <ChevronDown size={16} className="text-brand-muted" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -324,16 +396,22 @@ export default function AdminFabrics() {
 
                   {/* Color grid */}
                   <div className="flex flex-wrap gap-3 mb-5">
-                    {fabric.colors.map(c => (
+                    {fabric.colors.map((c) => (
                       <div key={c._id} className="relative group w-24">
                         <div className="w-24 h-24 overflow-hidden bg-brand-cream border border-brand-light">
-                          <img src={c.imageUrl} alt={c.name} className="w-full h-full object-cover" />
+                          <img
+                            src={c.imageUrl}
+                            alt={c.name}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                         <div className="mt-1.5">
                           <p className="font-body text-[10px] text-brand-primary font-medium truncate">
                             Арт. {c.article}
                           </p>
-                          <p className="font-body text-xs text-brand-muted truncate">{c.name}</p>
+                          <p className="font-body text-xs text-brand-muted truncate">
+                            {c.name}
+                          </p>
                         </div>
                         {/* Delete button appears on hover */}
                         <button
@@ -349,14 +427,19 @@ export default function AdminFabrics() {
                     {/* Add color trigger */}
                     <button
                       onClick={() => {
-                        setColorFabricId(colorFabricId === fabric._id ? null : fabric._id);
-                        setColorForm({ article: '', name: '' });
+                        setColorFabricId(
+                          colorFabricId === fabric._id ? null : fabric._id
+                        );
+                        setColorForm({ article: "", name: "" });
                         setColorFile(null);
                         setColorPreview(null);
                       }}
                       className="w-24 h-24 border-2 border-dashed border-brand-light hover:border-brand-primary flex flex-col items-center justify-center gap-1 transition-colors group"
                     >
-                      <Plus size={20} className="text-brand-muted group-hover:text-brand-primary transition-colors" />
+                      <Plus
+                        size={20}
+                        className="text-brand-muted group-hover:text-brand-primary transition-colors"
+                      />
                       <span className="font-body text-[10px] text-brand-muted group-hover:text-brand-primary">
                         Добавить
                       </span>
@@ -381,7 +464,12 @@ export default function AdminFabrics() {
                             type="text"
                             required
                             value={colorForm.article}
-                            onChange={e => setColorForm(p => ({ ...p, article: e.target.value }))}
+                            onChange={(e) =>
+                              setColorForm((p) => ({
+                                ...p,
+                                article: e.target.value,
+                              }))
+                            }
                             placeholder="UZH-001"
                             className="w-full border border-brand-light bg-white px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
                           />
@@ -394,7 +482,12 @@ export default function AdminFabrics() {
                             type="text"
                             required
                             value={colorForm.name}
-                            onChange={e => setColorForm(p => ({ ...p, name: e.target.value }))}
+                            onChange={(e) =>
+                              setColorForm((p) => ({
+                                ...p,
+                                name: e.target.value,
+                              }))
+                            }
                             placeholder="Голубой"
                             className="w-full border border-brand-light bg-white px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
                           />
@@ -411,7 +504,7 @@ export default function AdminFabrics() {
                             Выбрать файл
                           </div>
                           <span className="font-body text-sm text-brand-muted">
-                            {colorFile ? colorFile.name : 'Файл не выбран'}
+                            {colorFile ? colorFile.name : "Файл не выбран"}
                           </span>
                           <input
                             type="file"
@@ -436,7 +529,7 @@ export default function AdminFabrics() {
                           disabled={addingColor}
                           className="bg-brand-primary text-white px-6 py-2.5 font-body text-sm tracking-wider hover:bg-brand-dark transition-colors disabled:opacity-60"
                         >
-                          {addingColor ? 'Загрузка...' : 'Добавить расцветку'}
+                          {addingColor ? "Загрузка..." : "Добавить расцветку"}
                         </button>
                         <button
                           type="button"

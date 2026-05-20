@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
-import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
-import api from '../api/client';
-import type { Certificate } from '../types';
+import { useEffect, useState } from "react";
+import { X } from "lucide-react";
+import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
+import api from "../api/client";
+import type { Certificate } from "../types";
 
 export default function CertificatesSection() {
   const sectionRef = useIntersectionObserver();
@@ -11,7 +11,10 @@ export default function CertificatesSection() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/certificates').then(r => setCerts(r.data)).finally(() => setLoading(false));
+    api
+      .get("/certificates")
+      .then((r) => setCerts(r.data))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
@@ -21,13 +24,17 @@ export default function CertificatesSection() {
         className="section-fade max-w-7xl mx-auto px-6 lg:px-12"
       >
         <div className="text-center mb-16">
-          <p className="font-body text-xs tracking-[0.4em] uppercase text-brand-primary mb-4">Качество</p>
+          <p className="font-body text-xs tracking-[0.4em] uppercase text-brand-primary mb-4">
+            Качество
+          </p>
           <h2 className="font-display text-4xl md:text-5xl font-light text-brand-dark">
-            Сертификаты <span className="italic text-brand-primary">и стандарты</span>
+            Сертификаты{" "}
+            <span className="italic text-brand-primary">и товарные знаки</span>
           </h2>
           <div className="w-16 h-px bg-brand-primary mx-auto mt-6" />
           <p className="font-body text-brand-muted mt-6 max-w-lg mx-auto">
-            Наша продукция соответствует международным стандартам качества и безопасности
+            Наша продукция соответствует стандартам качества и
+            безопасности
           </p>
         </div>
 
@@ -37,32 +44,42 @@ export default function CertificatesSection() {
           </div>
         ) : certs.length === 0 ? (
           <div className="text-center py-20">
-            <p className="font-body text-brand-muted">Сертификаты скоро появятся</p>
+            <p className="font-body text-brand-muted">
+              Сертификаты скоро появятся
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {certs.map((cert) => (
-              <button
-                key={cert._id}
-                onClick={() => setSelected(cert)}
-                className="group bg-white p-4 hover:shadow-xl transition-all duration-300 text-left"
-              >
-                <div className="aspect-[3/4] bg-brand-cream mb-4 overflow-hidden">
-                  <img
-                    src={cert.imageUrl}
-                    alt={cert.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <h3 className="font-body text-sm font-medium text-brand-dark mb-1 line-clamp-2">{cert.title}</h3>
-                {cert.issuedBy && (
-                  <p className="font-body text-xs text-brand-muted">{cert.issuedBy}</p>
-                )}
-                {cert.year && (
-                  <p className="font-body text-xs text-brand-primary mt-1">{cert.year}</p>
-                )}
-              </button>
-            ))}
+            {certs &&
+              certs.length &&
+              certs.map((cert) => (
+                <button
+                  key={cert._id}
+                  onClick={() => setSelected(cert)}
+                  className="group bg-white p-4 hover:shadow-xl transition-all duration-300 text-left"
+                >
+                  <div className="aspect-[3/4] bg-brand-cream mb-4 overflow-hidden">
+                    <img
+                      src={cert.imageUrl}
+                      alt={cert.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <h3 className="font-body text-sm font-medium text-brand-dark mb-1 line-clamp-2">
+                    {cert.title}
+                  </h3>
+                  {cert.issuedBy && (
+                    <p className="font-body text-xs text-brand-muted">
+                      {cert.issuedBy}
+                    </p>
+                  )}
+                  {cert.year && (
+                    <p className="font-body text-xs text-brand-primary mt-1">
+                      {cert.year}
+                    </p>
+                  )}
+                </button>
+              ))}
           </div>
         )}
       </div>
@@ -75,7 +92,7 @@ export default function CertificatesSection() {
         >
           <div
             className="relative max-w-2xl w-full bg-white p-6"
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setSelected(null)}
@@ -88,12 +105,18 @@ export default function CertificatesSection() {
               alt={selected.title}
               className="w-full max-h-[60vh] object-contain mb-4"
             />
-            <h3 className="font-display text-2xl text-brand-dark mb-2">{selected.title}</h3>
+            <h3 className="font-display text-2xl text-brand-dark mb-2">
+              {selected.title}
+            </h3>
             {selected.description && (
-              <p className="font-body text-sm text-brand-muted mb-2">{selected.description}</p>
+              <p className="font-body text-sm text-brand-muted mb-2">
+                {selected.description}
+              </p>
             )}
             {selected.issuedBy && (
-              <p className="font-body text-xs text-brand-muted">Выдан: {selected.issuedBy}</p>
+              <p className="font-body text-xs text-brand-muted">
+                Выдан: {selected.issuedBy}
+              </p>
             )}
           </div>
         </div>

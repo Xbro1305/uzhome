@@ -22,6 +22,9 @@ export interface Fabric {
 }
 
 export interface Contact {
+  mapLink: string;
+  mapFrameLink: string;
+  max: string;
   _id: string;
   phone: string;
   phone2: string;

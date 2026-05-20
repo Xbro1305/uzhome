@@ -34,7 +34,7 @@ export default function ContactsSection() {
   return (
     <section
       id="contacts"
-      className="py-24 lg:py-36 bg-brand-primary relative overflow-hidden"
+      className="py-24 lg:py-36 bg-brand-primary relative overflow-hidden flex flex-col gap-6 lg:gap-12"
     >
       {/* Background decor */}
       <div className="absolute inset-0 pointer-events-none">
@@ -101,19 +101,26 @@ export default function ContactsSection() {
             )}
 
             {contact?.address && (
-              <div className="flex items-start gap-5">
-                <div className="w-12 h-12 bg-white/10 flex items-center justify-center flex-shrink-0">
-                  <MapPin size={20} className="text-white" />
+              <a
+                className="flex items-start gap-5 group"
+                href={contact.mapLink || "#"}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <MapPin size={20} className="text-white" />
+                  </div>
+                  <div>
+                    <p className="font-body text-[10px] tracking-[0.3em] uppercase text-white/50 mb-1">
+                      Адрес
+                    </p>
+                    <p className="font-body text-lg text-white">
+                      {contact.address}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-body text-[10px] tracking-[0.3em] uppercase text-white/50 mb-1">
-                    Адрес
-                  </p>
-                  <p className="font-body text-lg text-white">
-                    {contact.address}
-                  </p>
-                </div>
-              </div>
+              </a>
             )}
 
             {contact?.workingHours && (
@@ -169,6 +176,16 @@ export default function ContactsSection() {
                     className="px-4 py-2 border border-white/30 text-white/70 hover:bg-white/10 font-body text-xs tracking-widest uppercase transition-colors"
                   >
                     Instagram
+                  </a>
+                )}
+                {contact.max && (
+                  <a
+                    href={`https://max.ru/${contact.max.replace("@", "")}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-4 py-2 border border-white/30 text-white/70 hover:bg-white/10 font-body text-xs tracking-widest uppercase transition-colors"
+                  >
+                    MAX
                   </a>
                 )}
               </div>
@@ -252,6 +269,7 @@ export default function ContactsSection() {
                     placeholder="Ваш вопрос или заказ..."
                   />
                 </div>
+                <label></label>
                 <button
                   type="submit"
                   disabled={sending}
@@ -264,6 +282,14 @@ export default function ContactsSection() {
           </div>
         </div>
       </div>
+      {contact?.mapFrameLink && (
+        <div className="px-6 lg:px-12 image-container">
+          <div
+            className="h-full w-full grayscale-[100%]"
+            dangerouslySetInnerHTML={{ __html: contact?.mapFrameLink }}
+          ></div>
+        </div>
+      )}
     </section>
   );
 }

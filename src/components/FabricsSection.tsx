@@ -108,11 +108,25 @@ function FabricBlock({ fabric }: { fabric: Fabric }) {
           {fabric.name}
         </h3>
 
-        {fabric.description && (
-          <p className="font-body text-brand-muted leading-relaxed mb-8 max-w-2xl">
-            {fabric.description}
-          </p>
-        )}
+        <div className="flex flex-col md:items-center justify-between md:flex-row">
+          {fabric.description && (
+            <p className="font-body text-brand-muted leading-relaxed mb-8 max-w-2xl">
+              {fabric.description}
+            </p>
+          )}
+          {/* Price — right side */}
+          <div className="ml-auto text-right">
+            <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
+              Цена
+            </p>
+            <p className="font-display text-2xl md:text-3xl font-light text-brand-primary">
+              {fabric.price.toLocaleString("ru-RU")} {fabric.currency}
+              <span className="font-body text-sm text-brand-muted ml-1">
+                / {fabric.priceUnit}
+              </span>
+            </p>
+          </div>
+        </div>
 
         {/* Specs + price */}
         <div className="flex flex-wrap gap-6 items-end">
@@ -156,18 +170,6 @@ function FabricBlock({ fabric }: { fabric: Fabric }) {
               </p>
             </div>
           )}
-          {/* Price — right side */}
-          <div className="ml-auto text-right">
-            <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
-              Цена
-            </p>
-            <p className="font-display text-2xl md:text-3xl font-light text-brand-primary">
-              {fabric.price.toLocaleString("ru-RU")} {fabric.currency}
-              <span className="font-body text-sm text-brand-muted ml-1">
-                / {fabric.priceUnit}
-              </span>
-            </p>
-          </div>
         </div>
       </div>
 
@@ -325,15 +327,15 @@ export default function FabricsSection() {
           <div className="flex items-center justify-center py-32">
             <div className="w-8 h-8 border-2 border-brand-primary border-t-transparent rounded-full animate-spin" />
           </div>
-        ) : fabrics.length === 0 ? (
-          <div className="text-center py-32">
-            <p className="font-body text-brand-muted">Ткани скоро появятся</p>
-          </div>
-        ) : (
+        ) : fabrics && fabrics?.length && fabrics?.length !== 0 ? (
           <div className="space-y-24">
-            {fabrics.map((fabric) => (
+            {fabrics?.map((fabric) => (
               <FabricBlock key={fabric._id} fabric={fabric} />
             ))}
+          </div>
+        ) : (
+          <div className="text-center py-32">
+            <p className="font-body text-brand-muted">Ткани скоро появятся</p>
           </div>
         )}
       </div>
