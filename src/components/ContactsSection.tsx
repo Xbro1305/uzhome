@@ -3,10 +3,13 @@ import { Phone, Mail, MapPin, Clock, Send } from "lucide-react";
 import { useIntersectionObserver } from "../hooks/useIntersectionObserver";
 import api from "../api/client";
 import type { Contact } from "../types";
+import toast from "react-hot-toast";
 
 export default function ContactsSection() {
   const sectionRef = useIntersectionObserver();
+
   const [contact, setContact] = useState<Contact | null>(null);
+  const [agreement, setAgreement] = useState<boolean>(false);
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -22,7 +25,14 @@ export default function ContactsSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!agreement) {
+      toast.error("Пожалуйста, согласитесь на обработку данных");
+      return;
+    }
+
     setSending(true);
+
     // In real project, connect to email / telegram bot
     setTimeout(() => {
       setSending(false);
@@ -269,7 +279,17 @@ export default function ContactsSection() {
                     placeholder="Ваш вопрос или заказ..."
                   />
                 </div>
-                <label></label>
+                <label className="flex items-center text-white/50 text-xs">
+                  <input
+                    type="checkbox"
+                    checked={agreement}
+                    onChange={(e) => setAgreement(e.target.checked)}
+                    className="mr-2"
+                  />
+                  <span className="font-body text-xs text-white/50">
+                    Я согласен на обработку моих данных
+                  </span>
+                </label>
                 <button
                   type="submit"
                   disabled={sending}
