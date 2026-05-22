@@ -353,65 +353,70 @@ function FabricBlock({ fabric }: { fabric: Fabric }) {
               className="flex overflow-x-auto px-6 lg:px-12 cursor-grab select-none scrollbar-hide"
               style={{ gap: "12px" }}
             >
-              {colors.map((c, i) => {
-                const gapTotal = (slidesPerView - 1) * 12;
-                const w = `calc((100% - ${gapTotal}px) / ${slidesPerView})`;
-                return (
-                  <div
-                    key={c._id}
-                    className="flex-shrink-0 relative overflow-hidden group"
-                    style={{ width: w, minWidth: w, height: imgHeight }}
-                    onClick={() => {
-                      if (!dragMoved.current) {
-                        setColorIdx(i);
-                        setLightboxIdx(i);
-                      }
-                    }}
-                  >
-                    {c.imageUrl ? (
-                      <img
-                        src={c.imageUrl}
-                        alt={c.name}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        draggable={false}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-brand-cream flex items-center justify-center">
-                        <span className="font-body text-xs text-brand-muted">
-                          Нет фото
-                        </span>
-                      </div>
-                    )}
-
+              {colors
+                .sort(
+                  (a, b) =>
+                    a.order - b.order || a.article.localeCompare(b.article)
+                )
+                .map((c, i) => {
+                  const gapTotal = (slidesPerView - 1) * 12;
+                  const w = `calc((100% - ${gapTotal}px) / ${slidesPerView})`;
+                  return (
                     <div
-                      className="absolute inset-0 bg-white transition-opacity duration-300"
-                      style={{ opacity: i === colorIdx ? 0 : 0.2 }}
-                    />
-                    <div
-                      className="absolute top-0 left-0 right-0 h-0.5 bg-brand-primary transition-opacity duration-300"
-                      style={{ opacity: i === colorIdx ? 1 : 0 }}
-                    />
-
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow">
-                        <ZoomIn size={18} className="text-brand-dark" />
-                      </div>
-                    </div>
-
-                    <div
-                      className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent
-                                    px-4 py-4 translate-y-1 group-hover:translate-y-0 transition-transform duration-300"
+                      key={c._id}
+                      className="flex-shrink-0 relative overflow-hidden group"
+                      style={{ width: w, minWidth: w, height: imgHeight }}
+                      onClick={() => {
+                        if (!dragMoved.current) {
+                          setColorIdx(i);
+                          setLightboxIdx(i);
+                        }
+                      }}
                     >
-                      <p className="font-body text-[10px] tracking-[0.25em] uppercase text-white/70 mb-0.5">
-                        Арт. {c.article}
-                      </p>
-                      <p className="font-body text-sm font-medium text-white">
-                        {c.name}
-                      </p>
+                      {c.imageUrl ? (
+                        <img
+                          src={c.imageUrl}
+                          alt={c.name}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          draggable={false}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-brand-cream flex items-center justify-center">
+                          <span className="font-body text-xs text-brand-muted">
+                            Нет фото
+                          </span>
+                        </div>
+                      )}
+
+                      <div
+                        className="absolute inset-0 bg-white transition-opacity duration-300"
+                        style={{ opacity: i === colorIdx ? 0 : 0.2 }}
+                      />
+                      <div
+                        className="absolute top-0 left-0 right-0 h-0.5 bg-brand-primary transition-opacity duration-300"
+                        style={{ opacity: i === colorIdx ? 1 : 0 }}
+                      />
+
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow">
+                          <ZoomIn size={18} className="text-brand-dark" />
+                        </div>
+                      </div>
+
+                      <div
+                        className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent
+                                    px-4 py-4 translate-y-1 group-hover:translate-y-0 transition-transform duration-300"
+                      >
+                        <p className="font-body text-[10px] tracking-[0.25em] uppercase text-white/70 mb-0.5">
+                          Арт. {c.article}
+                        </p>
+                        <p className="font-body text-sm font-medium text-white">
+                          {c.name}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
 
             {colors.length > slidesPerView && (

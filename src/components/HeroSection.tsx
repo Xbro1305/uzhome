@@ -95,7 +95,7 @@ export default function HeroSection() {
               <div className="w-px bg-brand-primary/20" />
               <div>
                 <p className="font-display text-2xl xl:text-3xl font-light text-brand-primary">
-                  ISO
+                  EAC
                 </p>
                 <p className="font-body text-[10px] tracking-[0.15em] uppercase text-brand-muted mt-1">
                   Сертифицировано
@@ -122,14 +122,6 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Scroll hint */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-60 z-10">
-        <div className="w-px h-6 bg-brand-primary" />
-        <span className="font-body text-[10px] tracking-[0.3em] uppercase text-brand-muted">
-          Листать
-        </span>
       </div>
     </section>
   );

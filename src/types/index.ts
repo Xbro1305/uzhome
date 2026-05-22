@@ -1,4 +1,5 @@
 export interface ColorVariant {
+  order: any;
   _id: string;
   article: string;
   name: string;

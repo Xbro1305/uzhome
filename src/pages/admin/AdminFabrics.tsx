@@ -37,7 +37,11 @@ export default function AdminFabrics() {
   const [form, setForm] = useState({ ...emptyFabric });
 
   // Color form
-  const [colorForm, setColorForm] = useState({ article: "", name: "" });
+  const [colorForm, setColorForm] = useState({
+    article: "",
+    name: "",
+    order: 0,
+  });
   const [colorFile, setColorFile] = useState<File | null>(null);
   const [colorPreview, setColorPreview] = useState<string | null>(null);
   const [colorFabricId, setColorFabricId] = useState<string | null>(null);
@@ -45,7 +49,11 @@ export default function AdminFabrics() {
 
   // Color editing
   const [editingColorId, setEditingColorId] = useState<string | null>(null);
-  const [editColorForm, setEditColorForm] = useState({ article: "", name: "" });
+  const [editColorForm, setEditColorForm] = useState({
+    article: "",
+    name: "",
+    order: 0,
+  });
   const [editColorFile, setEditColorFile] = useState<File | null>(null);
   const [editColorPreview, setEditColorPreview] = useState<string | null>(null);
   const [savingColor, setSavingColor] = useState(false);
@@ -124,7 +132,7 @@ export default function AdminFabrics() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("Расцветка добавлена");
-      setColorForm({ article: "", name: "" });
+      setColorForm({ article: "", name: "", order: 0 });
       setColorFile(null);
       setColorPreview(null);
       load();
@@ -140,10 +148,11 @@ export default function AdminFabrics() {
     colorId: string,
     article: string,
     name: string,
-    imageUrl: string
+    imageUrl: string,
+    order: number
   ) => {
     setEditingColorId(`${fabricId}__${colorId}`);
-    setEditColorForm({ article, name });
+    setEditColorForm({ article, name, order });
     setEditColorFile(null);
     setEditColorPreview(imageUrl || null);
     // Close add form
@@ -161,6 +170,7 @@ export default function AdminFabrics() {
     if (editColorFile) fd.append("image", editColorFile);
     fd.append("article", editColorForm.article);
     fd.append("name", editColorForm.name);
+    fd.append("order", String(editColorForm.order));
     try {
       await api.put(`/fabrics/${fabricId}/colors/${colorId}`, fd, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -434,166 +444,193 @@ export default function AdminFabrics() {
                   </p>
 
                   <div className="flex flex-wrap gap-3 mb-5">
-                    {fabric.colors.map((c) => {
-                      const editKey = `${fabric._id}__${c._id}`;
-                      const isEditing = editingColorId === editKey;
+                    {fabric.colors
+                      .sort(
+                        (a, b) =>
+                          (a.order || 0) - (b.order || 0) ||
+                          a.article.localeCompare(b.article)
+                      )
+                      .map((c) => {
+                        const editKey = `${fabric._id}__${c._id}`;
+                        const isEditing = editingColorId === editKey;
 
-                      return (
-                        <div key={c._id} className="relative group">
-                          {isEditing ? (
-                            /* ── Edit color inline form ── */
-                            <form
-                              onSubmit={(e) =>
-                                handleSaveColor(e, fabric._id, c._id)
-                              }
-                              className="bg-brand-cream border border-brand-light p-4 w-72"
-                            >
-                              <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-muted mb-3">
-                                Редактировать расцветку
-                              </p>
-                              <div className="space-y-3 mb-3">
-                                <div>
-                                  <label className="block font-body text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
-                                    Артикул
-                                  </label>
-                                  <input
-                                    type="text"
-                                    value={editColorForm.article}
-                                    onChange={(e) =>
-                                      setEditColorForm((p) => ({
-                                        ...p,
-                                        article: e.target.value,
-                                      }))
-                                    }
-                                    className="w-full border border-brand-light bg-white px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block font-body text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
-                                    Название
-                                  </label>
-                                  <input
-                                    type="text"
-                                    value={editColorForm.name}
-                                    onChange={(e) =>
-                                      setEditColorForm((p) => ({
-                                        ...p,
-                                        name: e.target.value,
-                                      }))
-                                    }
-                                    className="w-full border border-brand-light bg-white px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block font-body text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
-                                    Фото (необязательно)
-                                  </label>
-                                  {editColorPreview && (
-                                    <img
-                                      src={editColorPreview}
-                                      alt="preview"
-                                      className="w-20 h-20 object-cover border border-brand-light mb-2"
-                                    />
-                                  )}
-                                  <label className="flex items-center gap-2 cursor-pointer">
-                                    <div className="px-3 py-1.5 border border-brand-primary text-brand-primary font-body text-xs hover:bg-brand-primary hover:text-white transition-colors">
-                                      Сменить фото
-                                    </div>
+                        return (
+                          <div key={c._id} className="relative group">
+                            {isEditing ? (
+                              /* ── Edit color inline form ── */
+                              <form
+                                onSubmit={(e) =>
+                                  handleSaveColor(e, fabric._id, c._id)
+                                }
+                                className="bg-brand-cream border border-brand-light p-4 w-72"
+                              >
+                                <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-muted mb-3">
+                                  Редактировать расцветку
+                                </p>
+                                <div className="space-y-3 mb-3">
+                                  <div>
+                                    <label className="block font-body text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
+                                      Артикул
+                                    </label>
                                     <input
-                                      type="file"
-                                      accept="image/jpeg,image/png,image/webp"
-                                      onChange={(e) => {
-                                        const f = e.target.files?.[0] || null;
-                                        setEditColorFile(f);
-                                        if (f)
-                                          setEditColorPreview(
-                                            URL.createObjectURL(f)
-                                          );
-                                      }}
-                                      className="hidden"
-                                    />
-                                  </label>
-                                </div>
-                              </div>
-                              <div className="flex gap-2">
-                                <button
-                                  type="submit"
-                                  disabled={savingColor}
-                                  className="flex-1 bg-brand-primary text-white font-body text-xs tracking-wider py-2 hover:bg-brand-dark transition-colors disabled:opacity-60"
-                                >
-                                  {savingColor ? "Сохранение..." : "Сохранить"}
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => setEditingColorId(null)}
-                                  className="px-3 py-2 border border-brand-light text-brand-muted font-body text-xs hover:bg-white transition-colors"
-                                >
-                                  Отмена
-                                </button>
-                              </div>
-                            </form>
-                          ) : (
-                            /* ── Color card ── */
-                            <div className="w-24">
-                              <div className="w-24 h-24 overflow-hidden bg-brand-cream border border-brand-light relative">
-                                {c.imageUrl ? (
-                                  <img
-                                    src={c.imageUrl}
-                                    alt={c.name}
-                                    className="w-full h-full object-cover"
-                                  />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center">
-                                    <Image
-                                      size={16}
-                                      className="text-brand-muted"
+                                      type="text"
+                                      value={editColorForm.article}
+                                      onChange={(e) =>
+                                        setEditColorForm((p) => ({
+                                          ...p,
+                                          article: e.target.value,
+                                        }))
+                                      }
+                                      className="w-full border border-brand-light bg-white px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
                                     />
                                   </div>
-                                )}
-                                {/* Action buttons on hover */}
-                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
-                                  <button
-                                    onClick={() =>
-                                      openEditColor(
-                                        fabric._id,
-                                        c._id,
-                                        c.article,
-                                        c.name,
-                                        c.imageUrl
-                                      )
-                                    }
-                                    className="w-7 h-7 bg-white rounded-full flex items-center justify-center hover:bg-brand-cream transition-colors"
-                                    title="Редактировать"
-                                  >
-                                    <Edit2
-                                      size={12}
-                                      className="text-brand-dark"
+                                  <div>
+                                    <label className="block font-body text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
+                                      Название
+                                    </label>
+                                    <input
+                                      type="text"
+                                      value={editColorForm.name}
+                                      onChange={(e) =>
+                                        setEditColorForm((p) => ({
+                                          ...p,
+                                          name: e.target.value,
+                                        }))
+                                      }
+                                      className="w-full border border-brand-light bg-white px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
                                     />
+                                  </div>{" "}
+                                  <div>
+                                    <label className="block font-body text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
+                                      Порядковый номер
+                                    </label>
+                                    <NumericFormat
+                                      value={editColorForm.order}
+                                      onValueChange={(e: any) =>
+                                        setEditColorForm((p) => ({
+                                          ...p,
+                                          order: e.floatValue,
+                                        }))
+                                      }
+                                      className="w-full border border-brand-light bg-white px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="block font-body text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
+                                      Фото (необязательно)
+                                    </label>
+                                    {editColorPreview && (
+                                      <img
+                                        src={editColorPreview}
+                                        alt="preview"
+                                        className="w-20 h-20 object-cover border border-brand-light mb-2"
+                                      />
+                                    )}
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                      <div className="px-3 py-1.5 border border-brand-primary text-brand-primary font-body text-xs hover:bg-brand-primary hover:text-white transition-colors">
+                                        Сменить фото
+                                      </div>
+                                      <input
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp"
+                                        onChange={(e) => {
+                                          const f = e.target.files?.[0] || null;
+                                          setEditColorFile(f);
+                                          if (f)
+                                            setEditColorPreview(
+                                              URL.createObjectURL(f)
+                                            );
+                                        }}
+                                        className="hidden"
+                                      />
+                                    </label>
+                                  </div>
+                                </div>
+                                <div className="flex gap-2">
+                                  <button
+                                    type="submit"
+                                    disabled={savingColor}
+                                    className="flex-1 bg-brand-primary text-white font-body text-xs tracking-wider py-2 hover:bg-brand-dark transition-colors disabled:opacity-60"
+                                  >
+                                    {savingColor
+                                      ? "Сохранение..."
+                                      : "Сохранить"}
                                   </button>
                                   <button
-                                    onClick={() =>
-                                      handleDeleteColor(fabric._id, c._id)
-                                    }
-                                    className="w-7 h-7 bg-red-400 rounded-full flex items-center justify-center hover:bg-red-500 transition-colors"
-                                    title="Удалить"
+                                    type="button"
+                                    onClick={() => setEditingColorId(null)}
+                                    className="px-3 py-2 border border-brand-light text-brand-muted font-body text-xs hover:bg-white transition-colors"
                                   >
-                                    <Trash2 size={12} className="text-white" />
+                                    Отмена
                                   </button>
                                 </div>
+                              </form>
+                            ) : (
+                              /* ── Color card ── */
+                              <div className="w-24">
+                                <div className="w-24 h-24 overflow-hidden bg-brand-cream border border-brand-light relative">
+                                  {c.imageUrl ? (
+                                    <img
+                                      src={c.imageUrl}
+                                      alt={c.name}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                      <Image
+                                        size={16}
+                                        className="text-brand-muted"
+                                      />
+                                    </div>
+                                  )}
+                                  {/* Action buttons on hover */}
+                                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                                    <button
+                                      onClick={() =>
+                                        openEditColor(
+                                          fabric._id,
+                                          c._id,
+                                          c.article,
+                                          c.name,
+                                          c.imageUrl,
+                                          c.order
+                                        )
+                                      }
+                                      className="w-7 h-7 bg-white rounded-full flex items-center justify-center hover:bg-brand-cream transition-colors"
+                                      title="Редактировать"
+                                    >
+                                      <Edit2
+                                        size={12}
+                                        className="text-brand-dark"
+                                      />
+                                    </button>
+                                    <button
+                                      onClick={() =>
+                                        handleDeleteColor(fabric._id, c._id)
+                                      }
+                                      className="w-7 h-7 bg-red-400 rounded-full flex items-center justify-center hover:bg-red-500 transition-colors"
+                                      title="Удалить"
+                                    >
+                                      <Trash2
+                                        size={12}
+                                        className="text-white"
+                                      />
+                                    </button>
+                                  </div>
+                                </div>
+                                <div className="mt-1.5">
+                                  <p className="font-body text-[10px] text-brand-primary font-medium truncate">
+                                    Арт. {c.article}
+                                  </p>
+                                  <p className="font-body text-xs text-brand-muted truncate">
+                                    {c.name}
+                                  </p>
+                                </div>
                               </div>
-                              <div className="mt-1.5">
-                                <p className="font-body text-[10px] text-brand-primary font-medium truncate">
-                                  Арт. {c.article}
-                                </p>
-                                <p className="font-body text-xs text-brand-muted truncate">
-                                  {c.name}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+                            )}
+                          </div>
+                        );
+                      })}
 
                     {/* Add color trigger */}
                     <button
@@ -601,7 +638,7 @@ export default function AdminFabrics() {
                         setColorFabricId(
                           colorFabricId === fabric._id ? null : fabric._id
                         );
-                        setColorForm({ article: "", name: "" });
+                        setColorForm({ article: "", name: "", order: 0 });
                         setColorFile(null);
                         setColorPreview(null);
                         setEditingColorId(null);
@@ -627,7 +664,7 @@ export default function AdminFabrics() {
                       <p className="font-body text-xs tracking-[0.2em] uppercase text-brand-muted mb-4">
                         Новая расцветка
                       </p>
-                      <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                      <div className="grid sm:grid-cols-[1fr_1fr_200px] gap-4 mb-4">
                         <div>
                           <label className="block font-body text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
                             Артикул *
@@ -658,6 +695,23 @@ export default function AdminFabrics() {
                               setColorForm((p) => ({
                                 ...p,
                                 name: e.target.value,
+                              }))
+                            }
+                            placeholder="Голубой"
+                            className="w-full border border-brand-light bg-white px-3 py-2 font-body text-sm focus:outline-none focus:border-brand-primary"
+                          />
+                        </div>{" "}
+                        <div>
+                          <label className="block font-body text-xs tracking-[0.15em] uppercase text-brand-muted mb-1">
+                            Порядковый номер
+                          </label>
+                          <NumericFormat
+                            required
+                            value={colorForm.order}
+                            onValueChange={(e: any) =>
+                              setColorForm((p) => ({
+                                ...p,
+                                order: e.floatValue || 0,
                               }))
                             }
                             placeholder="Голубой"
