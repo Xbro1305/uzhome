@@ -61,7 +61,7 @@ export default function HeroSection() {
             </p>
 
             <p
-              className="font-body text-sm text-brand-muted leading-relaxed mb-8 animate-fade-up"
+              className="font-body text-sm text-cream leading-relaxed mb-8 animate-fade-up"
               style={{ animationDelay: "0.2s" }}
             >
               Наши ткани производятся из 100% натурального узбекского хлопка —
