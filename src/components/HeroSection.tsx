@@ -1,6 +1,16 @@
-import banner from "./banner.jpg";
+import { useEffect, useState } from "react";
 
 export default function HeroSection() {
+  const [banner, setBannerUrl] = useState("/uploads/banner.jpg"); // дефолт
+
+  useEffect(() => {
+    fetch("/api/settings/banner_url")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.value) setBannerUrl(data.value);
+      })
+      .catch(() => {}); // если ошибка — остаётся дефолтный
+  }, []);
   const handleScroll = (href: string) => {
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
