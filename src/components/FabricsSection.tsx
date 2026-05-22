@@ -245,16 +245,60 @@ function FabricBlock({ fabric }: { fabric: Fabric }) {
       <div className="border-t border-brand-light pt-16 first:border-t-0 first:pt-0">
         {/* Info row */}
         <div className="max-w-7xl mx-auto px-6 lg:px-12 mb-10">
-          <h3 className="font-display text-3xl md:text-4xl font-light text-brand-dark mb-6">
-            {fabric.name}
-          </h3>
-
           <div className="flex flex-col md:items-center justify-between md:flex-row">
-            {fabric.description && (
+            {/* {fabric.description && (
               <p className="font-body text-brand-muted leading-relaxed mb-8 max-w-2xl">
                 {fabric.description}
               </p>
-            )}
+            )} */}
+            <div>
+              <h3 className="font-display text-3xl md:text-4xl font-light text-brand-dark mb-6">
+                {fabric.name}
+              </h3>
+              <div className="flex flex-wrap gap-6 items-end">
+                {fabric.composition && (
+                  <div>
+                    <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
+                      Состав
+                    </p>
+                    <p className="font-body text-sm text-brand-dark">
+                      {fabric.composition}
+                    </p>
+                  </div>
+                )}
+                {fabric.density && (
+                  <div>
+                    <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
+                      Плотность
+                    </p>
+                    <p className="font-body text-sm text-brand-dark">
+                      {fabric.density}
+                    </p>
+                  </div>
+                )}
+                {fabric.width && (
+                  <div>
+                    <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
+                      Ширина
+                    </p>
+                    <p className="font-body text-sm text-brand-dark">
+                      {fabric.width}
+                    </p>
+                  </div>
+                )}
+                {/* {colors.length > 0 && (
+              <div>
+                <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
+                  Расцветок
+                </p>
+                <p className="font-body text-sm text-brand-dark">
+                  {colors.length} вариантов
+                </p>
+              </div>
+            )} */}
+              </div>
+            </div>
+
             <div className="ml-auto text-right mb-[10px]">
               <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
                 Цена
@@ -272,49 +316,6 @@ function FabricBlock({ fabric }: { fabric: Fabric }) {
                 </span>
               </p>
             </div>
-          </div>
-
-          <div className="flex flex-wrap gap-6 items-end">
-            {fabric.composition && (
-              <div>
-                <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
-                  Состав
-                </p>
-                <p className="font-body text-sm text-brand-dark">
-                  {fabric.composition}
-                </p>
-              </div>
-            )}
-            {fabric.density && (
-              <div>
-                <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
-                  Плотность
-                </p>
-                <p className="font-body text-sm text-brand-dark">
-                  {fabric.density}
-                </p>
-              </div>
-            )}
-            {fabric.width && (
-              <div>
-                <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
-                  Ширина
-                </p>
-                <p className="font-body text-sm text-brand-dark">
-                  {fabric.width}
-                </p>
-              </div>
-            )}
-            {colors.length > 0 && (
-              <div>
-                <p className="font-body text-[10px] tracking-[0.25em] uppercase text-brand-muted mb-1">
-                  Расцветок
-                </p>
-                <p className="font-body text-sm text-brand-dark">
-                  {colors.length} вариантов
-                </p>
-              </div>
-            )}
           </div>
         </div>
 
