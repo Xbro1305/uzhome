@@ -98,7 +98,7 @@ export default function HeroSection() {
                   EAC
                 </p>
                 <p className="font-body text-[10px] tracking-[0.15em] uppercase text-brand-muted mt-1">
-                  Сертифицировано
+                  Декларировано
                 </p>
               </div>
             </div>
