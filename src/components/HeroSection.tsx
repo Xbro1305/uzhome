@@ -59,7 +59,7 @@ export default function HeroSection() {
             </p>
 
             <div
-              className="flex gap-6 mb-8 animate-fade-up"
+              className="flex flex-wrap gap-6 mb-8 animate-fade-up"
               style={{ animationDelay: "0.25s" }}
             >
               <div>
@@ -69,8 +69,8 @@ export default function HeroSection() {
                 <p className="font-body text-[10px] tracking-[0.15em] uppercase text-brand-muted mt-1">
                   Натуральный хлопок
                 </p>
+                <div className="w-px bg-brand-primary/20" />
               </div>
-              <div className="w-px bg-brand-primary/20" />
               <div>
                 <p className="font-display text-2xl xl:text-3xl font-light text-brand-primary">
                   50+
@@ -78,8 +78,8 @@ export default function HeroSection() {
                 <p className="font-body text-[10px] tracking-[0.15em] uppercase text-brand-muted mt-1">
                   Расцветок
                 </p>
+                <div className="w-px bg-brand-primary/20" />
               </div>
-              <div className="w-px bg-brand-primary/20" />
               <div>
                 <p className="font-display text-2xl xl:text-3xl font-light text-brand-primary">
                   EAC
