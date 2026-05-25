@@ -1,16 +1,4 @@
-import { useEffect, useState } from "react";
-
 export default function HeroSection() {
-  const [banner, setBannerUrl] = useState("/uploads/banner.jpg"); // дефолт
-
-  useEffect(() => {
-    fetch("/api/settings/banner_url")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.value) setBannerUrl(data.value);
-      })
-      .catch(() => {}); // если ошибка — остаётся дефолтный
-  }, []);
   const handleScroll = (href: string) => {
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
   };
@@ -23,7 +11,7 @@ export default function HeroSection() {
       {/* Full-screen banner */}
       <div className="absolute inset-0">
         <img
-          src={banner}
+          src={`/uploads/banner.jpg?v=${Date.now()}`}
           alt="УЗ Хоме — хлопчатобумажная ткань"
           className="w-full h-full object-cover"
         />
@@ -55,8 +43,8 @@ export default function HeroSection() {
               style={{ animationDelay: "0.1s" }}
             >
               <strong className="text-brand-dark font-medium">
-                УЗ Хоме — производитель хлопчатобумажных тканей для постельного
-                белья.
+                УЗ Хоме - поставщик хлопчатобумажных тканей для постельного
+                белья
               </strong>
             </p>
 
@@ -65,12 +53,11 @@ export default function HeroSection() {
               style={{ animationDelay: "0.2s" }}
             >
               Наши ткани производятся из 100% натурального узбекского хлопка —
-              одного из лучших в мире. Широкий ассортимент: сатин, бязь, поплин
-              и перкаль с разнообразными расцветками. Каждый рулон проходит
-              контроль качества и соответствует международным стандартам.
+              одного из лучших в мире. Широкий ассортимент с разнообразными
+              расцветками. Каждый рулон проходит контроль качества и
+              соответствует требованиям EAC.
             </p>
 
-            {/* Stats */}
             <div
               className="flex gap-6 mb-8 animate-fade-up"
               style={{ animationDelay: "0.25s" }}
