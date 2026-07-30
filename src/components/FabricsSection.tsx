@@ -112,6 +112,7 @@ function Lightbox({
           key={idx}
           src={active.imageUrl}
           alt={active.name}
+          decoding="async"
           className="max-h-full max-w-full object-contain transition-transform duration-300 select-none"
           style={{
             transform: `scale(${scale})`,
@@ -152,8 +153,10 @@ function Lightbox({
             >
               {c.imageUrl && (
                 <img
-                  src={c.imageUrl}
+                  src={c.thumbUrl || c.imageUrl}
                   alt={c.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover"
                 />
               )}
@@ -375,8 +378,10 @@ function FabricBlock({ fabric }: { fabric: Fabric }) {
                     >
                       {c.imageUrl ? (
                         <img
-                          src={c.imageUrl}
+                          src={c.thumbUrl || c.imageUrl}
                           alt={c.name}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                           draggable={false}
                         />

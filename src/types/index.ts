@@ -4,6 +4,7 @@ export interface ColorVariant {
   article: string;
   name: string;
   imageUrl: string;
+  thumbUrl?: string;
 }
 
 export interface Fabric {
